@@ -220,7 +220,7 @@ const socialItems = [
 export function Footer({ isDark }: { isDark?: boolean }) {
   return (
     <footer
-      className={cn("bg-background text-foreground", {
+      className={cn("bg-transparent text-foreground", {
         dark: isDark,
       })}
     >
