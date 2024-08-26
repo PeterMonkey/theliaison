@@ -1,4 +1,5 @@
-import SupaAuthVerifyEmail from "~/emails";
+//import SupaAuthVerifyEmail from "~/emails";
+import SupaAuthVerifyEmail from "../../../../../../packages/transactional/emails/MyEmails";
 import supabaseAdmin from "~/supabase/admin";
 
 import { Resend } from "resend";

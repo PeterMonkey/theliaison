@@ -9,7 +9,8 @@
 		"dev": "pnpm with-env next dev -p 3002",
 		"start": "pnpm with-env next start",
 		"typecheck": "tsc --noEmit",
-		"with-env": "dotenv -e ./.env.local --"
+		"with-env": "dotenv -e ./.env.local --",
+		"email": "email dev"
 	},
 	"dependencies": {
 		"@ai-sdk/openai": "0.0.24",
