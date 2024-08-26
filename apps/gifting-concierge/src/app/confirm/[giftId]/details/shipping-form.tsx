@@ -7,7 +7,7 @@ import type React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 //import {APIProvider, Map, Marker, AdvancedMarker} from '@vis.gl/react-google-maps';
-import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer, Tooltip } from 'react-leaflet';
 import { Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -73,7 +73,7 @@ const ShippingForm = ({
 			toast.info("Loading location...");
 			const fedexLocation = await getFedexLocations(data.postal_code);
 			setFedexLocationData(fedexLocation?.locationDetailList);
-			console.log(fedexLocation);
+			//console.log(fedexLocation);
 			
 		} catch (error) {
 			console.error(error)
@@ -123,7 +123,7 @@ const ShippingForm = ({
 	}
 
 	const googleApiKey = env.NEXT_PUBLIC_GOOGLE_API_KEY
-	//console.log(fedexLocationData[0].geoPositionalCoordinates);
+	console.log(fedexLocationData);
 	
 
 	return (
@@ -154,16 +154,38 @@ const ShippingForm = ({
 					fedexLocationData && 
 					//// Cambiar por un mapa //////////////////////////////
 					<div className="w-[400px] h-[45ppx]">
-					<MapContainer style={{width: "400px", height: "450px"}} center={[51.505, -0.09]} zoom={13}>
+					<MapContainer style={{width: "400px", height: "450px"}} 
+						center={[fedexLocationData[0].geoPositionalCoordinates.latitude, fedexLocationData[0].geoPositionalCoordinates.longitude]} zoom={13}
+						>
 						<TileLayer
 						    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 						    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 						  />
-						  <Marker position={[51.505, -0.09]} icon={icon}>
-						    <Popup>
-						      A pretty CSS3 popup. <br /> Easily customizable.
- 						   </Popup>
+						  {
+							fedexLocationData?.map((location) => (
+						  <Marker
+						   key={location.contactAndAddress.address.streetLines[0]}
+						   position={[location.geoPositionalCoordinates.latitude, location.geoPositionalCoordinates.longitude]} 
+						   icon={icon}>
+							<Tooltip>
+							<div className="w-40 grid grid-rows-2 gap-1 grid-flow-rows">
+							<div>
+				 					<p className="font-semibold">
+				 						{location.contactAndAddress.address.streetLines[0]}
+				 					</p>
+				 					<p>{location.contactAndAddress.address.city}</p>
+				 					<p>{location.contactAndAddress.address.stateOrProvinceCode}</p>
+				 				</div>
+				 				<div className="flex gap-2">
+									<p className="font-semibold">{location.distance.value}</p>
+				 					<p>{location.distance.units}</p>
+				 				</div>
+							</div>
+							</Tooltip>
 						  </Marker>
+
+							))
+						  }
 					</MapContainer>
 					</div>
 				// 	<Select>
