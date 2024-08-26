@@ -64,8 +64,18 @@ const ShippingForm = ({
 		resolver: zodResolver(ShippingFormSchema),
 	});
 
+	interface Address {
+		street: string;
+		city: string;
+		state: string;
+		distance: number;
+		units: string;
+	}
+
 	const [fedexLocationData, setFedexLocationData] = useState<any>();
 	const [isLoading, setIsLoading] = useState<boolean>(false)
+	const [address, setAddress] = useState<Address>()
+	const [isMap, setIsMap] = useState<boolean>(true)
 //"Getting fedex locations..."
 	async function onSubmit(data: z.infer<typeof ShippingFormSchema>) {
 		setIsLoading(true)
@@ -122,6 +132,23 @@ const ShippingForm = ({
 		// );
 	}
 
+	const selectedAddress = (
+		street: string, 
+		city: string, 
+		state: string, 
+		distance: number, 
+		units: string
+	) => {
+		setAddress({
+			street,
+			city,
+			state,
+			distance,
+			units
+		})
+		setIsMap(false)
+	}
+
 	const googleApiKey = env.NEXT_PUBLIC_GOOGLE_API_KEY
 	console.log(fedexLocationData);
 	
@@ -151,7 +178,7 @@ const ShippingForm = ({
 				</div>
 
 				{
-					fedexLocationData && 
+					fedexLocationData && isMap ?
 					//// Cambiar por un mapa //////////////////////////////
 					<div className="w-[400px] h-[45ppx]">
 					<MapContainer style={{width: "400px", height: "450px"}} 
@@ -164,9 +191,19 @@ const ShippingForm = ({
 						  {
 							fedexLocationData?.map((location) => (
 						  <Marker
-						   key={location.contactAndAddress.address.streetLines[0]}
+						  key={location.contactAndAddress.address.streetLines[0]}
+						   eventHandlers={{
+							click: () => selectedAddress(
+								location.contactAndAddress.address.streetLines[0],
+								location.contactAndAddress.address.city,
+								location.contactAndAddress.address.stateOrProvinceCode,
+								location.distance.value,
+								location.distance.units
+							)
+						   }}
 						   position={[location.geoPositionalCoordinates.latitude, location.geoPositionalCoordinates.longitude]} 
-						   icon={icon}>
+						   icon={icon}
+						   >
 							<Tooltip>
 							<div className="w-40 grid grid-rows-2 gap-1 grid-flow-rows">
 							<div>
@@ -187,6 +224,20 @@ const ShippingForm = ({
 							))
 						  }
 					</MapContainer>
+					</div>
+					:
+					<div className="w-40 grid grid-rows-2 gap-1 grid-flow-rows text-white">
+					<div>
+							 <p className="font-semibold">
+								 {address?.street}
+							 </p>
+							 <p>{address?.city}</p>
+							 <p>{address?.state}</p>
+						 </div>
+						 <div className="flex gap-2">
+							<p className="font-semibold">{address?.distance}</p>
+							 <p>{address?.units}</p>
+						 </div>
 					</div>
 				// 	<Select>
 				// 	<SelectTrigger>
