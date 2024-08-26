@@ -151,8 +151,8 @@ const Footer = () => {
 			)}
 			<div className="w-full flex justify-end gap-2">
 				{hasCompletedAllSteps ? (
-					<Button size="sm" onClick={resetSteps}>
-						Reset
+					<Button size="sm" onClick={resetSteps}> {/**Cambiar la funcion para que redireccione al dashboard */}
+						Dashboard
 					</Button>
 				) : (
 					<>
