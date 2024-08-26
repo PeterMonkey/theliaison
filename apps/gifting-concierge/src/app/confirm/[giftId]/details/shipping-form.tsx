@@ -6,8 +6,9 @@ import { Input } from "@theliaison/ui/input";
 import type React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import {APIProvider, Map, Marker, AdvancedMarker} from '@vis.gl/react-google-maps';
+//import {APIProvider, Map, Marker, AdvancedMarker} from '@vis.gl/react-google-maps';
+import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet';
+import "leaflet/dist/leaflet.css";
 
 import { cn } from "@theliaison/ui";
 import { SearchIcon } from "lucide-react";
@@ -146,36 +147,19 @@ const ShippingForm = ({
 				{
 					fedexLocationData && 
 					//// Cambiar por un mapa //////////////////////////////
-					<APIProvider apiKey={googleApiKey.toString()} region="US">
-					<Map
-					  mapId={'73f3af2aabafae58'}
-					  style={{width: '450px', height: '600px'}}
-					  defaultCenter={
-						{
-							lat: fedexLocationData[0].geoPositionalCoordinates.latitude || 35.0278019, 
-							lng: fedexLocationData[0].geoPositionalCoordinates.latitude || -90.0093266
-						}
-					}
-					  defaultZoom={10}
-					  gestureHandling={'greedy'}
-					  disableDefaultUI={false}
-					  streetViewControl
-					>
-						{
-							fedexLocationData.map((location) => (
-								<AdvancedMarker key={location.contactAndAddress.address.streetLines[0]} position={
-									{
-										lat: location.geoPositionalCoordinates.latitude, 
-										lng: location.geoPositionalCoordinates.longitude,
-									}
-								}
-								>
-									📍 
-								</AdvancedMarker>
-							))
-						}
-					</Map>
-				  </APIProvider>
+					<div className="w-[400px] h-[45ppx]">
+					<MapContainer style={{width: "400px", height: "450px"}} center={[51.505, -0.09]} zoom={13}>
+						<TileLayer
+						    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+						    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+						  />
+						  <Marker position={[51.505, -0.09]}>
+						    <Popup>
+						      A pretty CSS3 popup. <br /> Easily customizable.
+ 						   </Popup>
+						  </Marker>
+					</MapContainer>
+					</div>
 				// 	<Select>
 				// 	<SelectTrigger>
 				// 		<SelectValue placeholder="Select a location"/>
