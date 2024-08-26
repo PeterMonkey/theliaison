@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 //import {APIProvider, Map, Marker, AdvancedMarker} from '@vis.gl/react-google-maps';
 import { MapContainer, Marker, TileLayer, Popup } from 'react-leaflet';
+import { Icon } from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 import { cn } from "@theliaison/ui";
@@ -47,6 +48,11 @@ const ShippingFormSchema = z.object({
 		.string({ required_error: "Your postal code is required" })
 		.min(4, { message: "Your postal code should be at least 4 digits" }),
 });
+
+const icon = new Icon({
+	iconUrl: "https://cdn.icon-icons.com/icons2/2444/PNG/512/location_map_pin_mark_icon_148684.png",
+	iconSize: [38, 38]
+})
 
 const ShippingForm = ({
 	className,
@@ -153,7 +159,7 @@ const ShippingForm = ({
 						    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 						    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 						  />
-						  <Marker position={[51.505, -0.09]}>
+						  <Marker position={[51.505, -0.09]} icon={icon}>
 						    <Popup>
 						      A pretty CSS3 popup. <br /> Easily customizable.
  						   </Popup>
