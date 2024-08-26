@@ -72,7 +72,7 @@ export function QuotesRotate({ className, isDark = false }: QuotesRotateProps) {
     '"The manner of giving is worth more than the gift." - Pierre Corneille',
     '"Every gift which is given, even though it be small, is in reality great, if it is given with affection." - Pindar',
     '"We make a living by what we get, but we make a life by what we give." - Winston Churchill',
-    '"No one has ever overcome poor by giving." - Anne Frank',
+    '"No one has ever become poor by giving." - Anne Frank',
     '"It is not how much we give, but how much love we put into giving." - Mother Teresa',
     '"For it is in giving that we receive." - Francis of Assisi',
     '"Gratitude is not only the greatest of virtues, but the parent of all others." - Cicero',
