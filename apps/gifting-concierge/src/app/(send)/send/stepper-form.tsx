@@ -1,6 +1,6 @@
 "use client";
 
-import { type SVGProps, useCallback } from "react";
+import { type SVGProps, useCallback, useState, useEffect} from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -84,10 +84,27 @@ const SecondFormSchema = z.object({
 });
 
 function SecondStepForm() {
+
+	const [recipientData, setRecipientData] = useState({})
+
+	useEffect(() => {
+		setRecipientData({
+			email: recipientEmail,
+			phone: recipientPhoneNumber,
+			social: recipientSocialPlatform,
+			socialHandler: recipientSocialHandle,
+		})
+	},[])
+
 	const { nextStep } = useStepper();
 	const {
 		setRecipientContactWay,
 		recipientContactWay,
+		recipientName,
+		recipientPhoneNumber,
+		recipientSocialPlatform,
+		recipientSocialHandle,
+		recipientEmail,
 		setRecipientEmail,
 		setRecipientPhoneNumber,
 		setRecipientSocialPlatform,
@@ -113,6 +130,16 @@ function SecondStepForm() {
 		nextStep();
 		toast("Second step submitted!");
 	}
+
+	const recipientInfo = {
+		email: recipientEmail,
+		phone: recipientPhoneNumber,
+		social: recipientSocialPlatform,
+		socialHandler: recipientSocialHandle,
+	}
+
+	console.log(recipientName)
+	console.log(recipientData)
 
 	return (
 		<Form {...form}>
@@ -169,6 +196,7 @@ function SecondStepForm() {
 						control={form.control}
 						name="recipientEmail"
 						render={({ field }) => (
+							<>
 							<FormControl>
 								<Input
 									type="email"
@@ -184,6 +212,8 @@ function SecondStepForm() {
 									{...field}
 								/>
 							</FormControl>
+							<FormMessage />
+							</>
 						)}
 					/>
 				) : null}
