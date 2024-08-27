@@ -98,10 +98,10 @@ function VerifyOTP({email}:{email: string}) {
 	return(
 		<>
 		{
-			verify ? <h1>Verify Email</h1> :
+			verify ? <h1>Email Verify</h1> :
 		<Card className="mx-auto max-w-sm backdrop-blur-2xl bg-white/20 border-transparent shadow-sm">
 			<CardHeader>
-				<CardTitle className="text-2xl text-black">Verify Email</CardTitle>
+				<CardTitle className="text-2xl text-black">Email Verify</CardTitle>
 				<CardDescription className="text-black">
 				Please enter the OTP sent to your email address
 				</CardDescription>
