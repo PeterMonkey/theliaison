@@ -8,6 +8,7 @@ type StepItem = {
 	description?: string;
 	icon?: IconType;
 	optional?: boolean;
+	value?: number
 };
 
 interface StepOptions {

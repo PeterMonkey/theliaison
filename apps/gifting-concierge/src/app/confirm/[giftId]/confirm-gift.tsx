@@ -1,5 +1,5 @@
 "use client";
-
+import { useContext, useState, useEffect } from "react";
 import { useMediaQuery } from "@theliaison/hooks";
 import { cn } from "@theliaison/ui";
 import { Button } from "@theliaison/ui/button";
@@ -9,23 +9,28 @@ import { Step, Stepper, useStepper } from "@theliaison/ui/stepper";
 import { ChevronRightIcon } from "lucide-react";
 import Link from "next/link";
 import { useConfirmDialogStore } from "~/store/confirm-dialog";
-import { createClient } from '@supabase/supabase-js'; 
-import { LoginForm } from "~/app/(auth)/login/login-form";
+//import { createClient } from '@supabase/supabase-js'; 
+import { createClient } from "~/supabase/client";
+import { LoginForm } from "~/app/confirm/[giftId]/login-form";
+import { Context } from './context/context'
 
 
-const steps: { label: string; description: string }[] = [
+const steps: { label: string; description: string, value: number }[] = [
 	{
 		label: "Our terms",
 		description:
 			"Read our terms and conditions to ensure you understand what we're doing.",
+		value: 1
 	},
 	{
 		label: "Create an account",
 		description: "Create an account to receive your gift.",
+		value: 2
 	},
 	{
 		label: "Enter your address",
 		description: "Enter your delivery address securely through our platform.",
+		value: 3
 	},
 ];
 
@@ -105,6 +110,24 @@ export function ConfirmGift({ children }: { children: React.ReactNode }) {
 }
 
 function StepperConfirmGift({ children }: { children: React.ReactNode }) {
+
+	const [isSession, setIsSession] = useState<boolean>()
+	const {verifySeconsStep, secondStep} = useContext(Context)
+
+	const supabase = createClient()
+	supabase.auth.getSession()
+	  .then(({ data: { session } }) => {
+	    if(session){
+			setIsSession(true)
+		}
+		setIsSession(false)
+	  })
+	  .catch(error => {
+	    console.error(error);
+	  });
+	  
+	  console.log(isSession)
+
 	return (
 		<div className="flex w-full flex-col gap-4">
 			<Stepper initialStep={0} steps={steps} hidden={true}>
@@ -120,28 +143,53 @@ function StepperConfirmGift({ children }: { children: React.ReactNode }) {
 								)}
 							>
 								{index === 0 ? <FirstStepConfirmGift /> : null}
-								{index === 1 ? <LoginForm/> : null}
+								{index === 1 ? 
+								isSession ?
+								<LoginForm/> 
+								:
+								<div>Sesion iniciada</div>
+								: 
+								null
+								}
 								{index === 2 ? children : null}
 							</div>
 						</Step>
 					);
 				})}
-				<Footer />
+				<Footer sesion={isSession} />
 			</Stepper>
 		</div>
 	);
 }
 
-const Footer = () => {
+const Footer = ({sesion}) => {
+	const {
+		secondStep,
+		thirdStep,
+		verifySeconsStep
+	} = useContext(Context)
+
 	const {
 		nextStep,
 		prevStep,
+		currentStep,
 		resetSteps,
 		hasCompletedAllSteps,
 		isLastStep,
 		isOptionalStep,
 		isDisabledStep,
 	} = useStepper();
+
+		useEffect(() => {
+		if(sesion){
+			verifySeconsStep()
+			console.log(secondStep)
+		}
+	  },[sesion, verifySeconsStep, secondStep])
+
+	console.log(currentStep?.value)
+	console.log(secondStep)
+	console.log(sesion)
 	return (
 		<>
 			{hasCompletedAllSteps && (
@@ -165,9 +213,19 @@ const Footer = () => {
 						>
 							Prev
 						</Button>
+						{currentStep?.value === 1 ? 
 						<Button size="sm" className="bg-gray-800 hover:bg-slate-900" onClick={nextStep}>
 							{isLastStep ? "Finish" : isOptionalStep ? "Skip" : "Next"}
 						</Button>
+						: currentStep?.value === 2 ?
+						<Button disabled={!secondStep} size="sm" className="bg-gray-800 hover:bg-slate-900" onClick={nextStep}>
+						{isLastStep ? "Finish" : isOptionalStep ? "Skip" : "Next"}
+						</Button>
+						:
+						<Button disabled={!thirdStep} size="sm" className="bg-gray-800 hover:bg-slate-900" onClick={nextStep}>
+						{isLastStep ? "Finish" : isOptionalStep ? "Skip" : "Next"}
+						</Button>
+						}
 					</>
 				)}
 			</div>
