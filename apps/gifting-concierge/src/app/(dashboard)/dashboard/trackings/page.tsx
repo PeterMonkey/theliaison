@@ -1,4 +1,5 @@
 import TrackingCard from "./TrackingCard";
+import TrackingSent from "./TrackingSent";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@theliaison/ui/tabs";
 import { getTrackingStatus } from "./action";
 
@@ -29,7 +30,7 @@ export default async function GiftTracking() {
           <TrackingCard/>
         </TabsContent>
         <TabsContent value="gifts-sent">
-          <div>Gifts Sent</div>
+          <TrackingSent/>
         </TabsContent>
       </Tabs>
     </div>

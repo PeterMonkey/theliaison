@@ -3,7 +3,7 @@ import { Badge } from "@theliaison/ui/badge";
 //import { Progress } from "@theliaison/ui/progress"
 import { Truck, Package, CheckCircle } from "lucide-react";
 
-export default function TrackingCard() {
+export default function TrackingSent() {
   const trackingInfo = {
     trackingNumber: "1Z999AA1234567890",
     status: "In transit",
@@ -35,8 +35,11 @@ export default function TrackingCard() {
             <span className="font-medium">Estimated delivery:</span>
             <span>{trackingInfo.estimatedDelivery}</span>
           </div>
-          <div className="flex justify-between">
-          <div className="mt-6">
+          <div className="mt-8">
+            <h4 className="font-semibold mb-2">Sender</h4>
+            <span>Pedro Fernandez</span>
+          </div>
+          {/* <div className="mt-6">
             <h4 className="font-semibold mb-2">Shipping history</h4>
             <div className="space-y-3">
               {trackingInfo.events.map((event, index) => (
@@ -53,12 +56,7 @@ export default function TrackingCard() {
                 </div>
               ))}
             </div>
-          </div>
-          <div className="mt-6">
-            <h4 className="font-semibold mb-2">Sender</h4>
-            <span>Pedro Fernandez</span>
-          </div>
-          </div>
+          </div> */}
         </div>
       </CardContent>
     </Card>
