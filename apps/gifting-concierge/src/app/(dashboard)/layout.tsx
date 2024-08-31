@@ -22,6 +22,7 @@ import {
   ShoppingCart,
   Users2,
   Truck,
+  ShipIcon
 } from "lucide-react";
 import Link from "next/link";
 import { NavItem } from "./_components/nav-item";
@@ -79,6 +80,9 @@ function DesktopNav() {
         </NavItem>
         <NavItem label="Trackings" href="/dashboard/trackings">
           <Truck className="size-5" />
+        </NavItem>
+        <NavItem label="Shipping Information" href="/dashboard/shipping-info">
+          <ShipIcon className="size-5" />
         </NavItem>
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
