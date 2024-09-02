@@ -138,7 +138,7 @@ export function HeaderNavigation(props: HeaderNavigationProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className={cn(
-          "min-w-[16rem] rounded-xl z-50 overflow-hidden shadow-none bg-background dark:bg-black border-gray-500",
+          "min-w-[16rem] rounded-xl z-[999] overflow-hidden shadow-none bg-background dark:bg-black border-gray-500",
           {
             dark: false,
           }
