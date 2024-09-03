@@ -100,7 +100,7 @@ export default function StoreLocator() {
   return (
     <div className="flex h-[600px] mx-2">
       <div className="w-1/3 p-4 overflow-auto">
-        <div className="mb-4">
+        <div className="mb-4 w-full">
           <Form {...form}>
             <form
             className='flex gap-2'
@@ -131,19 +131,32 @@ export default function StoreLocator() {
             </form>
           </Form>
         </div>
-        {filteredStores.map(store => (
+        {fedexLocationData?.map(store => (
           <Card 
-            key={store.id} 
-            className={`mb-2 cursor-pointer ${selectedStore === store.id ? 'border-primary' : ''}`}
+            key={store.locationId} 
+            className={`mb-2 cursor-pointer ${selectedStore === store.locationId ? 'border-primary' : ''}`}
             onClick={() => {
-              setSelectedStore(store.id)
-              setMapCenter([store.lat, store.lng])
+              setSelectedStore(store.locationId)
+              setMapCenter([store.geoPositionalCoordinates.latitude, store.geoPositionalCoordinates.longitude])
               setMapZoom(14)
             }}
           >
-            <CardContent className="p-4">
-              <h3 className="font-bold">{store.name}</h3>
-              <p className="text-sm text-muted-foreground">Lat: {store.lat}, Lng: {store.lng}</p>
+            <CardContent className="p-2">
+            <div className="w-full font-light h-20 grid grid-rows-2 gap-1 grid-flow-col">
+							<div>
+				 					<p className="font-semibold">
+				 						{store.contactAndAddress.address.streetLines[0]}
+				 					</p>
+                  <div className='flex gap-2'>
+				 					<p>{store.contactAndAddress.address.city}</p>
+				 					<p>{store.contactAndAddress.address.stateOrProvinceCode}</p>
+                  </div>
+				 				</div>
+				 				<div className="flex gap-2 mt-1">
+									<p className="font-semibold">{store.distance.value}</p>
+				 					<p>{store.distance.units}</p>
+				 				</div>
+							</div>
             </CardContent>
           </Card>
         ))}
@@ -196,19 +209,6 @@ export default function StoreLocator() {
 						   position={[location.geoPositionalCoordinates.latitude, location.geoPositionalCoordinates.longitude]} 
 						   icon={icon}
 						   >
-							<div className="w-40 grid grid-rows-2 gap-1 grid-flow-rows">
-							<div>
-				 					<p className="font-semibold">
-				 						{location.contactAndAddress.address.streetLines[0]}
-				 					</p>
-				 					<p>{location.contactAndAddress.address.city}</p>
-				 					<p>{location.contactAndAddress.address.stateOrProvinceCode}</p>
-				 				</div>
-				 				<div className="flex gap-2">
-									<p className="font-semibold">{location.distance.value}</p>
-				 					<p>{location.distance.units}</p>
-				 				</div>
-							</div>
 						  </Marker>
 
 							))
