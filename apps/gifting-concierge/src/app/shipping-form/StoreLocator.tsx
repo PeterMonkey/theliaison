@@ -16,7 +16,7 @@ import {
 } from '@theliaison/ui/form'
 import { MapPin } from "lucide-react"
 import { Icon } from 'leaflet'
-import { getFedexLocations } from './action'
+import { getFedexLocations } from '../confirm/[giftId]/details/actions'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -31,6 +31,7 @@ const stores = [
 function ChangeView({ center, zoom }) {
   const map = useMap();
   map.setView(center, zoom);
+  console.log(center)
   return null;
 }
 
@@ -49,7 +50,7 @@ const ShippingFormSchema = z.object({
 export default function StoreLocator() {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedStore, setSelectedStore] = useState(null)
-  const [mapCenter, setMapCenter] = useState([40.416775, -3.703790])
+  const [mapCenter, setMapCenter] = useState<any[]>([40.416775, -3.703790])
   const [mapZoom, setMapZoom] = useState(12)
   const [fedexLocationData, setFedexLocationData ] = useState<any>()
 
@@ -79,18 +80,22 @@ export default function StoreLocator() {
 			//toast.info("Loading location...");
 			const fedexLocation = await getFedexLocations(data.postal_code);
 			setFedexLocationData(fedexLocation?.locationDetailList);
-			console.log(fedexLocation);
+      setMapCenter([
+        fedexLocation?.locationDetailList?.[0]?.geoPositionalCoordinates?.latitude,
+        fedexLocation?.locationDetailList?.[0]?.geoPositionalCoordinates?.longitude
+      ])
 			
 		} catch (error) {
 			console.error(error)
 		} 
     // finally {
-		// 	toast.success("FedEx locations fetched successfully!");
-		// 	setIsLoading(false)
+		// 	// toast.success("FedEx locations fetched successfully!");
+		// 	// setIsLoading(false)
 		// }
 	}
 
-  //console.log(fedexLocationData)
+  //console.log(fedexLocationData?.[0].geoPositionalCoordinates.latitude)
+  console.log(mapCenter)
 
   return (
     <div className="flex h-[600px] mx-2">
@@ -151,11 +156,14 @@ export default function StoreLocator() {
         >
           <ChangeView center={mapCenter} zoom={mapZoom} />
           <TileLayer
-						  attribution='<a href="https://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-						  url="https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}{r}.png?access-token={accessToken}"
-							accessToken="7SSU9Se75NtpK92WwEVKe4DlN5A8oMtdngksuZyqoObtxmfUJP5nhubhTM21UwEC"
-							minZoom={0}
-							maxZoom={22}
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          
+						  // attribution='<a href="https://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+						  // url="https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}{r}.png?access-token={accessToken}"
+							// accessToken="7SSU9Se75NtpK92WwEVKe4DlN5A8oMtdngksuZyqoObtxmfUJP5nhubhTM21UwEC"
+							// minZoom={0}
+							// maxZoom={22}
           />
           {/* {stores.map(store => (
             <Marker 
@@ -175,7 +183,7 @@ export default function StoreLocator() {
           						  {
 							fedexLocationData?.map((location) => (
 						  <Marker
-						  key={location.contactAndAddress.address.streetLines[0]}
+						  key={location.locationId}
 						   eventHandlers={{
 							click: () => selectedAddress(
 								location.contactAndAddress.address.streetLines[0],
