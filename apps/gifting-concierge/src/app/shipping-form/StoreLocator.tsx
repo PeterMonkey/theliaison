@@ -7,6 +7,13 @@ import 'leaflet/dist/leaflet.css'
 import { Input } from "@theliaison/ui/input"
 import { Button } from '@theliaison/ui/button'
 import { Card, CardContent } from "@theliaison/ui/card"
+import { 
+  Form, 
+  FormControl, 
+  FormField,
+  FormItem, 
+  FormMessage 
+} from '@theliaison/ui/form'
 import { MapPin } from "lucide-react"
 import { Icon } from 'leaflet'
 import { getFedexLocations } from './action'
@@ -72,7 +79,7 @@ export default function StoreLocator() {
 			//toast.info("Loading location...");
 			const fedexLocation = await getFedexLocations(data.postal_code);
 			setFedexLocationData(fedexLocation?.locationDetailList);
-			//console.log(fedexLocation);
+			console.log(fedexLocation);
 			
 		} catch (error) {
 			console.error(error)
@@ -83,28 +90,41 @@ export default function StoreLocator() {
 		// }
 	}
 
+  //console.log(fedexLocationData)
 
   return (
     <div className="flex h-[600px] mx-2">
       <div className="w-1/3 p-4 overflow-auto">
         <div className="mb-4">
-          <form
-          className='flex gap-2'
-          onSubmit={form.handleSubmit(onSubmit)}
-          >
-          <Input
-            type="text"
-            placeholder="Search for zip code..."
-            value={searchTerm}
-            //onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full"
-          />
-          <Button 
-          className='bg-foreground text-background hover:bg-foreground/70'
-          >
-            Search
-          </Button>
-          </form>
+          <Form {...form}>
+            <form
+            className='flex gap-2'
+            onSubmit={form.handleSubmit(onSubmit)}
+            >
+              <FormField
+              	control={form.control}
+						    name="postal_code"
+                render={({field}) => (
+                  <FormItem>
+                    <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Search for zip code..."
+                      className="w-full"
+                      {...field}
+                    />
+                    </FormControl>
+                    <FormMessage/>
+                  </FormItem>
+                )}
+                />
+            <Button 
+            className='bg-foreground text-background hover:bg-foreground/70'
+            >
+              Search
+            </Button>
+            </form>
+          </Form>
         </div>
         {filteredStores.map(store => (
           <Card 
@@ -131,10 +151,13 @@ export default function StoreLocator() {
         >
           <ChangeView center={mapCenter} zoom={mapZoom} />
           <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+						  attribution='<a href="https://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+						  url="https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}{r}.png?access-token={accessToken}"
+							accessToken="7SSU9Se75NtpK92WwEVKe4DlN5A8oMtdngksuZyqoObtxmfUJP5nhubhTM21UwEC"
+							minZoom={0}
+							maxZoom={22}
           />
-          {stores.map(store => (
+          {/* {stores.map(store => (
             <Marker 
               key={store.id}
               position={[store.lat, store.lng]}
@@ -148,7 +171,40 @@ export default function StoreLocator() {
               }}
             >
             </Marker>
-          ))}
+          ))} */}
+          						  {
+							fedexLocationData?.map((location) => (
+						  <Marker
+						  key={location.contactAndAddress.address.streetLines[0]}
+						   eventHandlers={{
+							click: () => selectedAddress(
+								location.contactAndAddress.address.streetLines[0],
+								location.contactAndAddress.address.city,
+								location.contactAndAddress.address.stateOrProvinceCode,
+								location.distance.value,
+								location.distance.units
+							)
+						   }}
+						   position={[location.geoPositionalCoordinates.latitude, location.geoPositionalCoordinates.longitude]} 
+						   icon={icon}
+						   >
+							<div className="w-40 grid grid-rows-2 gap-1 grid-flow-rows">
+							<div>
+				 					<p className="font-semibold">
+				 						{location.contactAndAddress.address.streetLines[0]}
+				 					</p>
+				 					<p>{location.contactAndAddress.address.city}</p>
+				 					<p>{location.contactAndAddress.address.stateOrProvinceCode}</p>
+				 				</div>
+				 				<div className="flex gap-2">
+									<p className="font-semibold">{location.distance.value}</p>
+				 					<p>{location.distance.units}</p>
+				 				</div>
+							</div>
+						  </Marker>
+
+							))
+						  }
         </MapContainer>
       </div>
     </div>

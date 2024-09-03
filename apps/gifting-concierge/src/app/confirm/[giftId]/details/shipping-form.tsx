@@ -185,8 +185,11 @@ const ShippingForm = ({
 						center={[fedexLocationData[0].geoPositionalCoordinates.latitude, fedexLocationData[0].geoPositionalCoordinates.longitude]} zoom={13}
 						>
 						<TileLayer
-						    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-						    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+						    attribution='<a href="https://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+						    url="https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}{r}.png?access-token={accessToken}"
+							accessToken="7SSU9Se75NtpK92WwEVKe4DlN5A8oMtdngksuZyqoObtxmfUJP5nhubhTM21UwEC"
+							minZoom={0}
+							maxZoom={22}
 						  />
 						  {
 							fedexLocationData?.map((location) => (
