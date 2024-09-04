@@ -202,13 +202,11 @@ export default function StoreLocator({giftId}) {
 						  <Marker
 						  key={location.locationId}
 						   eventHandlers={{
-							click: () => selectedAddress(
-								location.contactAndAddress.address.streetLines[0],
-								location.contactAndAddress.address.city,
-								location.contactAndAddress.address.stateOrProvinceCode,
-								location.distance.value,
-								location.distance.units
-							)
+							click: () => {
+                setSelectedStore(location.locationId)
+                setMapCenter([location.geoPositionalCoordinates.latitude, location.geoPositionalCoordinates.longitude])
+                setMapZoom(14)
+              }
 						   }}
 						   position={[location.geoPositionalCoordinates.latitude, location.geoPositionalCoordinates.longitude]} 
 						   icon={icon}
