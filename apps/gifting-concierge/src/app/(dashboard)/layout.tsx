@@ -81,9 +81,9 @@ function DesktopNav() {
         <NavItem label="Trackings" href="/dashboard/trackings">
           <Truck className="size-5" />
         </NavItem>
-        <NavItem label="Shipping Information" href="/dashboard/shipping-info">
+        {/* <NavItem label="Shipping Information" href="/dashboard/shipping-info">
           <ShipIcon className="size-5" />
-        </NavItem>
+        </NavItem> */}
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
         <Tooltip>
