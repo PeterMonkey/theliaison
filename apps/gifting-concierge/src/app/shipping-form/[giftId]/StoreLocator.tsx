@@ -14,7 +14,7 @@ import {
   FormMessage 
 } from '@theliaison/ui/form'
 import { Icon } from 'leaflet'
-import { getFedexLocations } from '../confirm/[giftId]/details/actions'
+import { getFedexLocations } from '../../confirm/[giftId]/details/actions'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -46,7 +46,7 @@ const ShippingFormSchema = z.object({
 		.min(4, { message: "Your postal code should be at least 4 digits" }),
 });
 
-export default function StoreLocator() {
+export default function StoreLocator({giftId}) {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedStore, setSelectedStore] = useState(null)
   const [mapCenter, setMapCenter] = useState<any[]>([40.416775, -3.703790])
