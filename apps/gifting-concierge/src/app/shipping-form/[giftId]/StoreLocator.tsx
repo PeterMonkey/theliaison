@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet'
+import MarkerClusterGroup from 'react-leaflet-cluster'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { Input } from "@theliaison/ui/input"
@@ -13,7 +14,7 @@ import {
   FormItem, 
   FormMessage 
 } from '@theliaison/ui/form'
-import { Icon } from 'leaflet'
+import { Icon, divIcon, point } from 'leaflet'
 import { getFedexLocations } from '../../confirm/[giftId]/details/actions'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -72,6 +73,15 @@ export default function StoreLocator({giftId}) {
       })
     }
   }, [])
+
+  const createClusterCustomIcon = (cluster) => {
+    const clusterIcon = divIcon({
+      html: `<span class="cluster-icon">${cluster.getChildCount()}</span>`,
+      className: "bg-black rounded-full pt-1 text-center text-lg text-white",
+      iconSize: point(33, 33, true),
+    });
+    return clusterIcon
+  };
 
   async function onSubmit(data: z.infer<typeof ShippingFormSchema>) {
 		//setIsLoading(true)
@@ -197,7 +207,11 @@ export default function StoreLocator({giftId}) {
             >
             </Marker>
           ))} */}
-          						  {
+          <MarkerClusterGroup
+          chunkedLoading
+          iconCreateFunction={createClusterCustomIcon}
+          >
+          		{
 							fedexLocationData?.map((location) => (
 						  <Marker
 						  key={location.locationId}
@@ -215,6 +229,7 @@ export default function StoreLocator({giftId}) {
 
 							))
 						  }
+          </MarkerClusterGroup>
         </MapContainer>
       </div>
     </div>
