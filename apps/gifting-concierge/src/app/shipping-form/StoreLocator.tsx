@@ -6,7 +6,6 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { Input } from "@theliaison/ui/input"
 import { Button } from '@theliaison/ui/button'
-import { Card, CardContent } from "@theliaison/ui/card"
 import { 
   Form, 
   FormControl, 
@@ -99,10 +98,10 @@ export default function StoreLocator() {
   console.log(mapCenter)
 
   return (
-    <div className="flex h-[800px]">
-      <div className="w-1/3 overflow-auto">
-        <div className="mb-10 w-full ">
-          <div className='text-2xl font-semibold mb-10'>
+    <div className="flex h-[700px]">
+      <div className="flex flex-col w-1/3 h-full">
+        <div className="mb-8">
+          <div className='text-2xl p-2 font-semibold mb-10'>
             <p>Search by Zip Code</p>
           </div>
           <Form {...form}>
@@ -135,6 +134,7 @@ export default function StoreLocator() {
             </form>
           </Form>
         </div>
+        <div className='h-full overflow-auto'>
         {fedexLocationData?.map(store => (
           <div 
             key={store.locationId} 
@@ -164,6 +164,7 @@ export default function StoreLocator() {
             </div>
           </div>
         ))}
+        </div>
       </div>
       <div className="w-2/3">
         <MapContainer 
