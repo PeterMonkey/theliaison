@@ -13,7 +13,6 @@ import {
   FormItem, 
   FormMessage 
 } from '@theliaison/ui/form'
-import { MapPin } from "lucide-react"
 import { Icon } from 'leaflet'
 import { getFedexLocations } from '../confirm/[giftId]/details/actions'
 import { z } from 'zod'
@@ -134,7 +133,7 @@ export default function StoreLocator() {
             </form>
           </Form>
         </div>
-        <div className='h-full overflow-auto'>
+        <div className='h-full border overflow-auto'>
         {fedexLocationData?.map(store => (
           <div 
             key={store.locationId} 
