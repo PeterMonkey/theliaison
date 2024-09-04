@@ -20,6 +20,7 @@ import { getFedexLocations } from '../confirm/[giftId]/details/actions'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { Locate } from 'lucide-react' 
 
 const stores = [
   { id: 1, name: "Tienda Centro", lat: 40.416775, lng: -3.703790 },
@@ -98,12 +99,15 @@ export default function StoreLocator() {
   console.log(mapCenter)
 
   return (
-    <div className="flex h-[800px] mx-2">
-      <div className="w-1/3 p-4 overflow-auto">
-        <div className="mb-4 w-full">
+    <div className="flex h-[800px]">
+      <div className="w-1/3 overflow-auto">
+        <div className="mb-10 w-full ">
+          <div className='text-2xl font-semibold mb-10'>
+            <p>Search by Zip Code</p>
+          </div>
           <Form {...form}>
             <form
-            className='flex gap-2'
+            className='grid grid-flow-col gap-2 p-2'
             onSubmit={form.handleSubmit(onSubmit)}
             >
               <FormField
@@ -115,7 +119,7 @@ export default function StoreLocator() {
                     <Input
                       type="text"
                       placeholder="Search for zip code..."
-                      className="w-full"
+                      className="w-full h-14 border border-black" 
                       {...field}
                     />
                     </FormControl>
@@ -124,7 +128,7 @@ export default function StoreLocator() {
                 )}
                 />
             <Button 
-            className='bg-foreground text-background hover:bg-foreground/70'
+            className='bg-foreground text-background hover:bg-foreground/70 h-14'
             >
               Search
             </Button>
@@ -132,16 +136,16 @@ export default function StoreLocator() {
           </Form>
         </div>
         {fedexLocationData?.map(store => (
-          <Card 
+          <div 
             key={store.locationId} 
-            className={`mb-2 cursor-pointer ${selectedStore === store.locationId ? 'border-primary' : ''}`}
+            className={`cursor-pointer mr-2 ${selectedStore === store.locationId ? 'border-2 border-black' : 'border'}`}
             onClick={() => {
               setSelectedStore(store.locationId)
               setMapCenter([store.geoPositionalCoordinates.latitude, store.geoPositionalCoordinates.longitude])
               setMapZoom(14)
             }}
           >
-            <CardContent className="p-2">
+            <div className="p-2">
             <div className="w-full font-light h-20 grid grid-rows-2 gap-1 grid-flow-col">
 							<div>
 				 					<p className="font-semibold">
@@ -157,8 +161,8 @@ export default function StoreLocator() {
 				 					<p>{store.distance.units}</p>
 				 				</div>
 							</div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         ))}
       </div>
       <div className="w-2/3">
