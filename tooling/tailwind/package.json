@@ -17,7 +17,7 @@
 		"tailwindcss-animate": "1.0.7"
 	},
 	"devDependencies": {
-		"typescript": "5.4.5",
-		"@theliaison/tsconfig": "workspace:*"
+		"@theliaison/tsconfig": "workspace:*",
+		"typescript": "5.4.5"
 	}
 }
