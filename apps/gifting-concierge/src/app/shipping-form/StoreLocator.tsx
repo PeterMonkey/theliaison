@@ -37,7 +37,7 @@ function ChangeView({ center, zoom }) {
 
 // Icono personalizado para los marcadores
 const icon = new Icon({
-  iconUrl: "https://cdn.icon-icons.com/icons2/2444/PNG/512/location_map_pin_mark_icon_148684.png",
+  iconUrl: "https://cdn.icon-icons.com/icons2/1364/PNG/512/maplocalization_89142.png",
   iconSize: [38, 38]
 })
 
@@ -98,7 +98,7 @@ export default function StoreLocator() {
   console.log(mapCenter)
 
   return (
-    <div className="flex h-[600px] mx-2">
+    <div className="flex h-[800px] mx-2">
       <div className="w-1/3 p-4 overflow-auto">
         <div className="mb-4 w-full">
           <Form {...form}>
