@@ -20,6 +20,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Locate } from 'lucide-react' 
+import SendForm from './SendForm'
 
 const stores = [
   { id: 1, name: "Tienda Centro", lat: 40.416775, lng: -3.703790 },
@@ -53,6 +54,7 @@ export default function StoreLocator({giftId}) {
   const [mapCenter, setMapCenter] = useState<any[]>([40.416775, -3.703790])
   const [mapZoom, setMapZoom] = useState(12)
   const [fedexLocationData, setFedexLocationData ] = useState<any>()
+  const [step, setStep] = useState<boolean>(true)
 
   const filteredStores = stores.filter(store =>
     store.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -107,130 +109,144 @@ export default function StoreLocator({giftId}) {
   console.log(mapCenter)
 
   return (
-    <div className="flex h-[700px]">
-      <div className="flex flex-col w-1/3 h-full">
-        <div className="mb-8">
-          <div className='text-2xl p-2 font-semibold mb-10'>
-            <p>Search by Zip Code</p>
-          </div>
-          <Form {...form}>
-            <form
-            className='grid grid-flow-col gap-2 p-2'
-            onSubmit={form.handleSubmit(onSubmit)}
-            >
-              <FormField
-              	control={form.control}
-						    name="postal_code"
-                render={({field}) => (
-                  <FormItem>
-                    <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="Search for zip code..."
-                      className="w-full h-14 border border-black" 
-                      {...field}
-                    />
-                    </FormControl>
-                    <FormMessage/>
-                  </FormItem>
-                )}
-                />
-            <Button 
-            className='bg-foreground text-background hover:bg-foreground/70 h-14'
-            >
-              Search
-            </Button>
-            </form>
-          </Form>
-        </div>
-        <div className='h-full border overflow-auto'>
-        {fedexLocationData?.map(store => (
-          <div 
-            key={store.locationId} 
-            className={`cursor-pointer mr-2 ${selectedStore === store.locationId ? 'border-2 border-black' : 'border'}`}
-            onClick={() => {
-              setSelectedStore(store.locationId)
-              setMapCenter([store.geoPositionalCoordinates.latitude, store.geoPositionalCoordinates.longitude])
-              setMapZoom(14)
-            }}
-          >
-            <div className="p-2">
-            <div className="w-full font-light h-20 grid grid-rows-2 gap-1 grid-flow-col">
-							<div>
-				 					<p className="font-semibold">
-				 						{store.contactAndAddress.address.streetLines[0]}
-				 					</p>
-                  <div className='flex gap-2'>
-				 					<p>{store.contactAndAddress.address.city}</p>
-				 					<p>{store.contactAndAddress.address.stateOrProvinceCode}</p>
-                  </div>
-				 				</div>
-				 				<div className="flex gap-2 mt-1">
-									<p className="font-semibold">{store.distance.value}</p>
-				 					<p>{store.distance.units}</p>
-				 				</div>
-							</div>
+    <div>
+      {step ?
+      <div className="flex h-[700px]">
+        <div className="flex flex-col w-1/3 h-full">
+          <div className="mb-8">
+            <div className='text-2xl p-2 font-semibold mb-10'>
+              <p>Search by Zip Code</p>
             </div>
+            <Form {...form}>
+              <form
+              className='grid grid-flow-col gap-2 p-2'
+              onSubmit={form.handleSubmit(onSubmit)}
+              >
+                <FormField
+                  control={form.control}
+                  name="postal_code"
+                  render={({field}) => (
+                    <FormItem>
+                      <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Search for zip code..."
+                        className="w-full h-14 border border-black" 
+                        {...field}
+                      />
+                      </FormControl>
+                      <FormMessage/>
+                    </FormItem>
+                  )}
+                  />
+              <Button 
+              className='bg-foreground text-background hover:bg-foreground/70 h-14'
+              >
+                Search
+              </Button>
+              </form>
+            </Form>
           </div>
-        ))}
-        </div>
-      </div>
-      <div className="w-2/3">
-        <MapContainer 
-          center={mapCenter} 
-          zoom={mapZoom} 
-          style={{ height: "100%", width: "100%" }}
-        >
-          <ChangeView center={mapCenter} zoom={mapZoom} />
-          <TileLayer
-              // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          
-						  attribution='<a href="https://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-						  url="https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}{r}.png?access-token={accessToken}"
-							accessToken="7SSU9Se75NtpK92WwEVKe4DlN5A8oMtdngksuZyqoObtxmfUJP5nhubhTM21UwEC"
-							minZoom={0}
-							maxZoom={22}
-          />
-          {/* {stores.map(store => (
-            <Marker 
-              key={store.id}
-              position={[store.lat, store.lng]}
-              icon={icon}
-              eventHandlers={{
-                click: () => {
-                  setSelectedStore(store.id)
-                  setMapCenter([store.lat, store.lng])
-                  setMapZoom(14)
-                },
+          <div className='h-full border overflow-auto'>
+          {fedexLocationData?.map(store => (
+            <div 
+              key={store.locationId} 
+              className={`cursor-pointer mr-2 ${selectedStore === store.locationId ? 'border-2 border-black' : 'border'}`}
+              onClick={() => {
+                setSelectedStore(store.locationId)
+                setMapCenter([store.geoPositionalCoordinates.latitude, store.geoPositionalCoordinates.longitude])
+                setMapZoom(14)
               }}
             >
-            </Marker>
-          ))} */}
-          <MarkerClusterGroup
-          chunkedLoading
-          iconCreateFunction={createClusterCustomIcon}
+              <div className="p-2">
+              <div className="w-full font-light h-20 grid grid-rows-2 gap-1 grid-flow-col">
+                <div>
+                    <p className="font-semibold">
+                      {store.contactAndAddress.address.streetLines[0]}
+                    </p>
+                    <div className='flex gap-2'>
+                    <p>{store.contactAndAddress.address.city}</p>
+                    <p>{store.contactAndAddress.address.stateOrProvinceCode}</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2 mt-1">
+                    <p className="font-semibold">{store.distance.value}</p>
+                    <p>{store.distance.units}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+          </div>
+        </div>
+        <div className="w-2/3">
+          <MapContainer 
+            center={mapCenter} 
+            zoom={mapZoom} 
+            style={{ height: "100%", width: "100%" }}
           >
-          		{
-							fedexLocationData?.map((location) => (
-						  <Marker
-						  key={location.locationId}
-						   eventHandlers={{
-							click: () => {
-                setSelectedStore(location.locationId)
-                setMapCenter([location.geoPositionalCoordinates.latitude, location.geoPositionalCoordinates.longitude])
-                setMapZoom(14)
-              }
-						   }}
-						   position={[location.geoPositionalCoordinates.latitude, location.geoPositionalCoordinates.longitude]} 
-						   icon={icon}
-						   >
-						  </Marker>
+            <ChangeView center={mapCenter} zoom={mapZoom} />
+            <TileLayer
+                // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            
+                attribution='<a href="https://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}{r}.png?access-token={accessToken}"
+                accessToken="7SSU9Se75NtpK92WwEVKe4DlN5A8oMtdngksuZyqoObtxmfUJP5nhubhTM21UwEC"
+                minZoom={0}
+                maxZoom={22}
+            />
+            {/* {stores.map(store => (
+              <Marker 
+                key={store.id}
+                position={[store.lat, store.lng]}
+                icon={icon}
+                eventHandlers={{
+                  click: () => {
+                    setSelectedStore(store.id)
+                    setMapCenter([store.lat, store.lng])
+                    setMapZoom(14)
+                  },
+                }}
+              >
+              </Marker>
+            ))} */}
+            <MarkerClusterGroup
+            chunkedLoading
+            iconCreateFunction={createClusterCustomIcon}
+            >
+                {
+                fedexLocationData?.map((location) => (
+                <Marker
+                key={location.locationId}
+                eventHandlers={{
+                click: () => {
+                  setSelectedStore(location.locationId)
+                  setMapCenter([location.geoPositionalCoordinates.latitude, location.geoPositionalCoordinates.longitude])
+                  setMapZoom(14)
+                }
+                }}
+                position={[location.geoPositionalCoordinates.latitude, location.geoPositionalCoordinates.longitude]} 
+                icon={icon}
+                >
+                </Marker>
 
-							))
-						  }
-          </MarkerClusterGroup>
-        </MapContainer>
+                ))
+                }
+            </MarkerClusterGroup>
+          </MapContainer>
+        </div>
+      </div>
+        :
+        <SendForm/>
+      }
+      <div className='flex justify-center mt-5'>
+        <Button 
+          className='bg-foreground text-background w-1/4 hover:bg-foreground/80'
+          onClick={() => setStep(!step)}
+          >
+            {step? 'Next' : 'Previous'}
+        </Button>
       </div>
     </div>
   )
